@@ -27,7 +27,7 @@ ARG FUSEKI_JAR=jena-fuseki-server-${JENA_VERSION}.jar
 ARG JAVA_MINIMAL=/opt/java-minimal
 
 ## ---- Stage: Download and build java.
-FROM openjdk:${OPENJDK_VERSION}-bullseye AS base
+FROM eclipse-temurin:${OPENJDK_VERSION}-jdk-alpine AS base
 
 ARG JAVA_MINIMAL
 ARG JENA_VERSION

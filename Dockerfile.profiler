@@ -75,7 +75,7 @@ ADD log4j2.properties .
 # -H : no home directorry
 # -D : no password
 
-RUN adduser -H -D fuseki fuseki
+RUN adduser --no-create-home --disabled-login --group fuseki fuseki
 
 ## ---- Stage: Build runtime
 FROM openjdk:17-jdk-buster

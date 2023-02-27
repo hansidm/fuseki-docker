@@ -40,7 +40,7 @@ RUN [ "${JENA_VERSION}" != "" ] || { echo -e '\n**** Set JENA_VERSION ****\n' ; 
 RUN echo && echo "==== Docker build for Apache Jena Fuseki ${JENA_VERSION} ====" && echo
 
 # Alpine: For objcopy used in jlink
-#RUN apk add --no-cache curl binutils
+RUN apk add --no-cache curl binutils
 
 ## -- Fuseki installed and runs in /fuseki.
 WORKDIR $FUSEKI_DIR
@@ -75,8 +75,9 @@ ADD log4j2.properties .
 # -H : no home directorry
 # -D : no password
 
-RUN addgroup fuseki
-RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
+#RUN addgroup fuseki
+#RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
+RUN adduser -H -D fuseki fuseki
 
 ## ---- Stage: Build runtime
 FROM alpine:${ALPINE_VERSION}

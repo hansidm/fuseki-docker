@@ -1,0 +1,22 @@
+name: build our image
+
+on:
+  push:
+    branches: test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: install buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: latest
+      - name: build the image
+      run: |
+        docker buildx build \
+          --tag hansidm/multiarch-example:latest \
+          --platform linux/amd64,linux/arm64 . 

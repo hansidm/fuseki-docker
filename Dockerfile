@@ -71,13 +71,8 @@ RUN \
 ADD entrypoint.sh .
 ADD log4j2.properties .
 
-# Run as this user
-# -H : no home directorry
-# -D : no password
-
 RUN addgroup fuseki
 RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
-#RUN adduser -H -D fuseki fuseki
 
 ## ---- Stage: Build runtime
 FROM debian:bullseye-slim

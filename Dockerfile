@@ -27,7 +27,7 @@ ARG FUSEKI_JAR=jena-fuseki-server-${JENA_VERSION}.jar
 ARG JAVA_MINIMAL=/opt/java-minimal
 
 ## ---- Stage: Download and build java.
-FROM eclipse-temurin:${OPENJDK_VERSION}-jdk-alpine AS base
+FROM eclipse-temurin:${OPENJDK_VERSION}-jdk AS base
 
 ARG JAVA_MINIMAL
 ARG JENA_VERSION
@@ -40,7 +40,7 @@ RUN [ "${JENA_VERSION}" != "" ] || { echo -e '\n**** Set JENA_VERSION ****\n' ; 
 RUN echo && echo "==== Docker build for Apache Jena Fuseki ${JENA_VERSION} ====" && echo
 
 # Alpine: For objcopy used in jlink
-RUN apk add --no-cache curl binutils
+#RUN apk add --no-cache curl binutils
 
 ## -- Fuseki installed and runs in /fuseki.
 WORKDIR $FUSEKI_DIR
@@ -75,9 +75,9 @@ ADD log4j2.properties .
 # -H : no home directorry
 # -D : no password
 
-#RUN addgroup fuseki
-#RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
-RUN adduser -H -D fuseki fuseki
+RUN addgroup fuseki
+RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
+#RUN adduser -H -D fuseki fuseki
 
 ## ---- Stage: Build runtime
 FROM alpine:${ALPINE_VERSION}
@@ -96,6 +96,8 @@ WORKDIR $FUSEKI_DIR
 
 ARG LOGS=${FUSEKI_DIR}/logs
 ARG DATA=${FUSEKI_DIR}/databases
+
+RUN apk add --no-cache gcompat
 
 RUN \
     mkdir -p $LOGS && \

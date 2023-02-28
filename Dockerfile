@@ -80,7 +80,7 @@ RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuse
 #RUN adduser -H -D fuseki fuseki
 
 ## ---- Stage: Build runtime
-FROM alpine:${ALPINE_VERSION}
+FROM debian:bullseye-slim
 
 ## Import ARGs
 ARG JENA_VERSION
@@ -96,8 +96,6 @@ WORKDIR $FUSEKI_DIR
 
 ARG LOGS=${FUSEKI_DIR}/logs
 ARG DATA=${FUSEKI_DIR}/databases
-
-RUN apk add --no-cache gcompat
 
 RUN \
     mkdir -p $LOGS && \

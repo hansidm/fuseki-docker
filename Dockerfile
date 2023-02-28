@@ -18,8 +18,8 @@
 ## This Dockefile builds a reduced footprint container.
 
 ARG OPENJDK_VERSION=17
-ARG ALPINE_VERSION=3.15.0
-ARG JENA_VERSION=4.6.1
+ARG ALPINE_VERSION=3.15
+ARG JENA_VERSION=4.7.0
 
 # Internal, passed between stages.
 ARG FUSEKI_DIR=/fuseki
@@ -27,7 +27,7 @@ ARG FUSEKI_JAR=jena-fuseki-server-${JENA_VERSION}.jar
 ARG JAVA_MINIMAL=/opt/java-minimal
 
 ## ---- Stage: Download and build java.
-FROM openjdk:${OPENJDK_VERSION}-alpine AS base
+FROM eclipse-temurin:${OPENJDK_VERSION}-jdk AS base
 
 ARG JAVA_MINIMAL
 ARG JENA_VERSION
@@ -40,7 +40,7 @@ RUN [ "${JENA_VERSION}" != "" ] || { echo -e '\n**** Set JENA_VERSION ****\n' ; 
 RUN echo && echo "==== Docker build for Apache Jena Fuseki ${JENA_VERSION} ====" && echo
 
 # Alpine: For objcopy used in jlink
-RUN apk add --no-cache curl binutils
+#RUN apk add --no-cache curl binutils
 
 ## -- Fuseki installed and runs in /fuseki.
 WORKDIR $FUSEKI_DIR
@@ -71,14 +71,11 @@ RUN \
 ADD entrypoint.sh .
 ADD log4j2.properties .
 
-# Run as this user
-# -H : no home directorry
-# -D : no password
-
-RUN adduser -H -D fuseki fuseki
+RUN addgroup fuseki
+RUN adduser --no-create-home --disabled-login --disabled-password --ingroup fuseki fuseki
 
 ## ---- Stage: Build runtime
-FROM alpine:${ALPINE_VERSION}
+FROM debian:bullseye-slim
 
 ## Import ARGs
 ARG JENA_VERSION
